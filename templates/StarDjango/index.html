@@ -1,0 +1,41 @@
+{% extends "base.template" %}
+{% load staticfiles %}
+
+{% block title %}
+    Universe Viewer - Splash/Root
+{% endblock title %}
+
+{% block scripts %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'StarDjango/style.css' %}" type="text/css"/>
+{% endblock scripts %}
+
+{% block topbar %}
+    <div id="topbar">
+        <p>Hallo</p>
+    </div>
+{% endblock topbar %}
+
+{% block content %}
+    <div id="content">
+        <h3>Universe Generator 0.1</h3>
+        </ br>
+        <p>Please select an option:</ br>
+            <ul>
+                <li><a href="/user">User</a> - Login or Register</li>
+                <li><a href="/universe">Universe</a> - View or Edit Universe</li>
+            </ul>
+        </p>
+    </div>
+{% endblock content %}
+
+{% block trailer %}
+    <div id="trailer">
+        <h4>Database Statistics</h4>
+        <ul>
+            {% for row in uniquery %}
+                <li>{{ row.0 }}: {{row.1}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock trailer %}

@@ -1,0 +1,43 @@
+{% extends "base.template" %}
+{% load staticfiles %}
+
+{% block title %}
+    Universe Viewer - New Universe Dialogue
+{% endblock title %}
+
+{% block scripts %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'Universe/style.css' %}" type="text/css"/>
+{% endblock scripts %}
+
+{% block topbar %}
+Blah blah blah
+{% endblock topbar %}
+
+{% block sidebar %}
+<p>System information:
+    <table border=1 style="width:100%">
+        <tr>
+            <td>Origin:</td>    <td style="text-align:right;">AnOrigin!</td>
+        </tr>
+        <tr>
+            <td>Planetoids:</td>
+        </tr>
+        <tr>
+            <td>APlanet</td><td id="test">AnotherPlanet</td>
+        </tr>
+    </table>
+</p>
+
+<script>
+    $( "#test" ).load("http://localhost:8000/reqForm?app=Universe&form=System")
+</script>
+{% endblock sidebar %}
+
+{% block content %}
+    <div id="formStuffs"></div>
+    <div id="previewPane"></div>
+{% endblock content %}
+
+{% block trailer %}
+{% endblock trailer %}

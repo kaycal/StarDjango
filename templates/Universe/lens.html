@@ -1,0 +1,102 @@
+{% extends "base.template" %}
+{% load staticfiles %}
+
+{% block title %}
+    Universe Viewer - Splash/Root
+{% endblock title %}
+
+{% block scripts %}
+{% endblock scripts %}
+
+{% block topbar %}
+    <div id="topbar">
+        <p>Hallo</p>
+    </div>
+{% endblock topbar %}
+
+{% block content %}
+    <p>{{ system.name }}</p>
+    <p>{{ focus.name }}</p>
+            <script src="{% static 'Universe/three.min.js' %}"></script>
+            <script src="{% static 'Universe/TrackballControls.js' %}"></script>
+            <script src="{% static 'Universe/Curve.js' %}"></script>
+            <script src="{% static 'Universe/scene.js' %}"></script>
+
+
+            <script>
+
+
+
+                init();
+
+                {% for planet in system.getPlanets %} // this may not function as expected/hoped
+                    
+                    var {{ planet.name }} = {
+                        positional: {aX: {{ planet.aX }},
+                                     aZ: 0,//{{ planet.aY }},
+                                     aY: {{ planet.aY }},
+                                     radius: {{ planet.radius }},
+                                     exRadius: {{ planet.exRadius }},
+                                     orbitRate: 60.0,//{{ planet.orbitRate }},
+                                     orbitPos: 0,
+                                     birthday: {{ planet.getAgeInMillis }}},
+                        object: {
+                            main: new THREE.Mesh(
+                                new THREE.SphereGeometry({{ planet.radius }},32,32),
+                                new THREE.MeshPhongMaterial({ // Change this to depth-map
+                                    map: THREE.ImageUtils.loadTexture("{{ planet.mainmap.url }}"),
+                                    bumpMap: THREE.ImageUtils.loadTexture("{{ planet.mainbump.url }}"),
+                                    bumpScale: 4,
+                                })
+                            ),
+                            // Special-Effects
+                            extra: new THREE.Mesh(
+                                new THREE.SphereGeometry({{ planet.radius }}+0.2,32,32),
+                                new THREE.MeshPhongMaterial({
+                                    map: THREE.ImageUtils.loadTexture("{{ planet.extramap.url }}"),
+                                    transparent: true,
+                                    opacity: 0.3,
+                                })
+                            ),
+                            orbit: new EllipseCurve(0,0, {{ planet.aX }} - 10, {{ planet.aY }} + 10, 0, Math.PI * 2.0,false),
+                        },
+                        update: function(delta) { // check maths; theta represents seconds
+
+                            this.positional.orbitPos += delta*4;
+                            this.positional.orbitPos = this.positional.orbitPos % this.positional.orbitRate; // Repeatedly count to orbitRate;
+
+                            this.object.main.position = this.object.orbit.getPointAt(this.positional.orbitPos  / this.positional.orbitRate);
+                            this.object.extra.position = this.object.main.position; // For now, just line up
+
+                            // Spin spin spin
+                            this.object.main.rotation.y += 1/4 * delta;
+                            this.object.extra.rotation.x += delta;
+                            this.object.extra.rotation.z -= delta;
+                        }
+                    }; 
+
+
+                    scene.add({{ planet.name }}.object.main);
+                    scene.add({{ planet.name }}.object.extra); // This will likely throw an error, if no extra present. Prep for that.
+
+                    objects.push({{ planet.name }});
+                    console.log({{ planet.name }});
+                    console.log({{ planet.name }}.object.orbit.getPoint(0));
+
+
+                {% endfor %}
+
+                var light = new THREE.PointLight( 0x404040, 3, 500 );
+                light.position.set( 0, 0, 0 );
+                scene.add( light );
+
+                // Preposition
+//                prePos();
+
+                animate();
+
+            </script>
+{% endblock content %}
+
+{% block trailer %}
+{% endblock trailer %}

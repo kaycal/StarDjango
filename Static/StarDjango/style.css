@@ -1,0 +1,16 @@
+#topbar { /* fixed; use as a quick handy contextual toolbar. does not move when window scrolled. */
+    background-color: red;
+    height: 10%;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
+
+#sidebar {} /* don't need this right now */
+
+#content {
+    padding-top: 5%;
+}
+
+#trailer {}
